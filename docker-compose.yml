@@ -1,0 +1,75 @@
+version: '3.8'
+
+services:
+  postgres_airflow:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: ${POSTGRES_AIRFLOW_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_AIRFLOW_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_AIRFLOW_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    
+  postgres_metabase:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: ${MB_DB_USER}
+      POSTGRES_PASSWORD: ${MB_DB_PASS}
+      POSTGRES_DB: ${MB_DB_DBNAME}
+    ports:
+      - "5433:5432"
+    volumes:
+      - pg_data_metabase:/var/lib/postgresql/data
+  airflow-standalone:
+    build: 
+      context: .
+      dockerfile: docker/airflow/Dockerfile
+    image: apache/airflow:3.0.0-python3.11
+    ports:
+      - "8080:8080"
+    environment:
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${POSTGRES_AIRFLOW_USER}:${POSTGRES_AIRFLOW_PASSWORD}@postgres_airflow/${POSTGRES_AIRFLOW_DB}
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__WEBSERVER__DEFAULT_UI_TIMEZONE: America/Sao_Paulo
+    depends_on:
+      - postgres_airflow
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: standalone
+    
+  metabase:
+    image: metabase/metabase:latest
+    ports:
+      - "${MB_JETTY_PORT}:3000"
+    depends_on:
+      - postgres_metabase
+    environment:
+      MB_DB_TYPE: postgres
+      MB_DB_DBNAME: ${MB_DB_DBNAME}
+      MB_DB_PORT: ${MB_DB_PORT}
+      MB_DB_USER: ${MB_DB_USER}
+      MB_DB_PASS: ${MB_DB_PASS}
+      MB_DB_HOST: ${MB_DB_HOST}
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:${CLICKHOUSE_VERSION}
+    ports:
+      - "${CLICKHOUSE_HTTP_PORT}:8123"
+      - "${CLICKHOUSE_NATIVE_PORT}:9000"
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+  etl-runner:
+    build: ./docker/etl-runner
+    volumes:
+      - ./etl:/app/etl
+      - ./data:/app/data
+      - ./utils:/app/utils
+    command: tail -f /dev/null
+
+volumes:
+  pg_data:
+  pg_data_metabase:
+  clickhouse_data:
