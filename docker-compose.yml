@@ -62,7 +62,9 @@ services:
     volumes:
       - clickhouse_data:/var/lib/clickhouse
   etl-runner:
-    build: ./docker/etl-runner
+    build:
+      context: .
+      dockerfile: docker/etl-runner/Dockerfile
     volumes:
       - ./etl:/app/etl
       - ./data:/app/data
