@@ -22,6 +22,7 @@ services:
       - "5433:5432"
     volumes:
       - pg_data_metabase:/var/lib/postgresql/data
+
   airflow-standalone:
     build: 
       context: .
@@ -65,11 +66,29 @@ services:
     build:
       context: .
       dockerfile: docker/etl-runner/Dockerfile
+    ports:
+      - "4040:4040"
     volumes:
       - ./etl:/app/etl
       - ./data:/app/data
       - ./utils:/app/utils
+      - ./spark-events:/tmp/spark-events
     command: tail -f /dev/null
+  
+  spark-history:
+    image: bitnami/spark:3.5.0
+    container_name: dev-sandbox-spark-history
+    ports:
+      - "18080:18080"
+    environment:
+      - SPARK_NO_DAEMONIZE=true
+      - SPARK_HISTORY_OPTS=-Dspark.history.fs.logDirectory=file:/tmp/spark-events -Dspark.history.ui.port=18080 -Dspark.plugins=io.dataflint.spark.SparkDataflintPlugin
+      - SPARK_EXTRA_CLASSPATH=/opt/bitnami/spark/dataflint
+    command: >
+      bash -c "/opt/bitnami/spark/bin/spark-class org.apache.spark.deploy.history.HistoryServer"
+    volumes:
+      - ./spark-events:/tmp/spark-events
+      - ./spark-jars:/opt/bitnami/spark/dataflint
 
 volumes:
   pg_data:

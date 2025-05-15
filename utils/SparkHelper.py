@@ -37,6 +37,8 @@ class SessionBuilder():
             "spark.local.dir": "/tmp/spark/",
             "spark.sql.warehouse.dir": "/tmp/spark/spark-warehouse/",
             "spark.serializer": "org.apache.spark.serializer.KryoSerializer",
+            "spark.eventLog.enabled": "true",
+            "spark.eventLog.dir": "file:/tmp/spark-events",
         }
 
         for param, setting in configs.items():

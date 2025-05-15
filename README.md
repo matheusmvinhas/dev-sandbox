@@ -55,6 +55,7 @@ make airflow-password  # Exibe a senha gerada do Airflow (modo standalone)
 | Airflow    | http://localhost:8080    | `admin` / gerado no log       |
 | Metabase   | http://localhost:3000    | Setup via UI                  |
 | ClickHouse | http://localhost:8123    | Usuário `default`, sem senha  |
+| History Server | http://localhost:18080   |   |
 
 ---
 

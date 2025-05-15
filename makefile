@@ -1,5 +1,6 @@
 # Nome do container do Airflow
 AIRFLOW_CONTAINER=dev-sandbox-airflow-standalone-1
+METABASE_CONTAINER=dev-sandbox-metabase-1
 
 # Nome do container do Postgres usado pelo Metabase
 POSTGRES_METABASE_CONTAINER=dev-sandbox-postgres_metabase-1
@@ -44,6 +45,10 @@ logs-airflow:
 	@echo "📄 Acompanhando logs do Airflow..."
 	docker logs -f $(AIRFLOW_CONTAINER)
 
+# 🧾 Logs do Airflow
+logs-metabase:
+	@echo "📄 Acompanhando logs do Airflow..."
+	docker logs -f $(METABASE_CONTAINER)
 # 🧪 Teste (placeholder)
 test:
 	@echo "✅ Teste OK - ambiente configurado"
