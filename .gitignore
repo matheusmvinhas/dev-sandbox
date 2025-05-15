@@ -6,3 +6,4 @@ data/
 spark-warehouse/
 .metabase.db
 .DS_Store
+spark-jars/
