@@ -9,8 +9,9 @@ COPY requirements-spark.txt /tmp/requirements.txt
 # Instala libs extras
 RUN pip install --no-cache-dir -r /tmp/requirements.txt
 
+ENV SPARK_VERSION=3.5
+
 COPY spark-jars/ /opt/bitnami/spark/jars/
 
 # Cria diretório de trabalho
 WORKDIR /app
-CMD ["tail", "-f", "/dev/null"]

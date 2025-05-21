@@ -1,3 +1,2 @@
-duckdb
-pyspark
-psycopg2-binary
+duckdb==0.9.2
+apache-airflow-providers-docker==4.2.1

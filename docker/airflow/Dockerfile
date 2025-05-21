@@ -4,5 +4,7 @@ USER root
 RUN apt-get update && apt-get install -y gcc g++ libpq-dev
 
 USER airflow
-COPY requirements-airflow.txt /
+COPY requirements-airflow.txt /requirements.txt
+
+RUN pip install --upgrade pip setuptools wheel
 RUN pip install --no-cache-dir -r /requirements.txt

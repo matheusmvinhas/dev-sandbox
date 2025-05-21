@@ -61,7 +61,9 @@ services:
       - "${CLICKHOUSE_HTTP_PORT}:8123"
       - "${CLICKHOUSE_NATIVE_PORT}:9000"
     volumes:
+      - ./clickhouse-config-backup:/etc/clickhouse-server
       - clickhouse_data:/var/lib/clickhouse
+
   etl-runner:
     build:
       context: .
