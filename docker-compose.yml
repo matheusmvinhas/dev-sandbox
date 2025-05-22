@@ -68,7 +68,6 @@ services:
     build:
       context: .
       dockerfile: docker/etl-runner/Dockerfile
-    profiles: ["etl"]
     ports:
       - "4040:4040"
     volumes:
