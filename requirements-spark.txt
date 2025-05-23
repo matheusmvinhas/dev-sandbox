@@ -7,3 +7,4 @@ delta-spark==3.2.1
 boto3
 pyarrow
 pydeequ==1.4.0
+sparkmeasure
