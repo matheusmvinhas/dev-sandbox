@@ -1,0 +1,212 @@
+create database metrics;
+
+CREATE TABLE metrics.pydeequ_verification_results
+(
+    `check` String,
+    `check_level` String,
+    `check_status` String,
+    `constraint` String,
+    `constraint_status` String,
+    `constraint_message` String,
+    `execution_id` String,
+    `execution_ts` TIMESTAMP,
+    `tabela_referente` String,
+)
+ENGINE = MergeTree()
+ORDER BY check;
+
+CREATE TABLE metrics.task_metrics (
+    -- colunas existentes...
+
+    jobId Int32,
+    jobGroup Nullable(String),
+    stageId Int32,
+    `index` Int64,
+    launchTime Int64,
+    finishTime Int64,
+    duration Int64,
+    schedulerDelay Int64,
+    executorId Nullable(String),
+    host Nullable(String),
+    taskLocality Int32,
+    speculative UInt8,
+    gettingResultTime Int64,
+    successful UInt8,
+    executorRunTime Int64,
+    executorCpuTime Int64,
+    executorDeserializeTime Int64,
+    executorDeserializeCpuTime Int64,
+    resultSerializationTime Int64,
+    jvmGCTime Int64,
+    resultSize Int64,
+    diskBytesSpilled Int64,
+    memoryBytesSpilled Int64,
+    peakExecutionMemory Int64,
+    recordsRead Int64,
+    bytesRead Int64,
+    recordsWritten Int64,
+    bytesWritten Int64,
+    shuffleFetchWaitTime Int64,
+    shuffleTotalBytesRead Int64,
+    shuffleTotalBlocksFetched Int64,
+    shuffleLocalBlocksFetched Int64,
+    shuffleRemoteBlocksFetched Int64,
+    shuffleLocalBytesRead Int64,
+    shuffleRemoteBytesRead Int64,
+    shuffleRemoteBytesReadToDisk Int64,
+    shuffleRecordsRead Int64,
+    shuffleWriteTime Int64,
+    shuffleBytesWritten Int64,
+    shuffleRecordsWritten Int64,
+
+    -- colunas extras:
+    tabela_referente String,
+    execution_date Date,
+    execution_id String,
+    execution_ts DateTime
+) ENGINE = MergeTree()
+ORDER BY (jobId, stageId, `index`);
+
+
+
+
+
+CREATE TABLE metrics.agg_task_metrics (
+    numtasks Int64,
+    elapsedTime Nullable(Int64),
+    duration Nullable(Int64),
+    schedulerDelayTime Nullable(Int64),
+    executorRunTime Nullable(Int64),
+    executorCpuTime Nullable(Int64),
+    executorDeserializeTime Nullable(Int64),
+    executorDeserializeCpuTime Nullable(Int64),
+    resultSerializationTime Nullable(Int64),
+    jvmGCTime Nullable(Int64),
+    shuffleFetchWaitTime Nullable(Int64),
+    shuffleWriteTime Nullable(Int64),
+    gettingResultTime Nullable(Int64),
+    resultSize Nullable(Int64),
+    diskBytesSpilled Nullable(Int64),
+    memoryBytesSpilled Nullable(Int64),
+    peakExecutionMemory Nullable(Int64),
+    recordsRead Nullable(Int64),
+    bytesRead Nullable(Int64),
+    recordsWritten Nullable(Int64),
+    bytesWritten Nullable(Int64),
+    shuffleRecordsRead Nullable(Int64),
+    shuffleTotalBlocksFetched Nullable(Int64),
+    shuffleLocalBlocksFetched Nullable(Int64),
+    shuffleRemoteBlocksFetched Nullable(Int64),
+    shuffleTotalBytesRead Nullable(Int64),
+    shuffleLocalBytesRead Nullable(Int64),
+    shuffleRemoteBytesRead Nullable(Int64),
+    shuffleRemoteBytesReadToDisk Nullable(Int64),
+    shuffleBytesWritten Nullable(Int64),
+    shuffleRecordsWritten Nullable(Int64),
+
+    -- colunas extras:
+    tabela_referente String,
+    execution_date Date,
+    execution_id String,
+    execution_ts DateTime
+) ENGINE = MergeTree()
+ORDER BY numtasks;
+
+
+
+
+
+CREATE TABLE metrics.stg_metrics (
+    jobId Int32,
+    jobGroup Nullable(String),
+    stageId Int32,
+    name Nullable(String),
+    submissionTime Int64,
+    completionTime Int64,
+    stageDuration Int64,
+    numTasks Int32,
+    executorRunTime Int64,
+    executorCpuTime Int64,
+    executorDeserializeTime Int64,
+    executorDeserializeCpuTime Int64,
+    resultSerializationTime Int64,
+    jvmGCTime Int64,
+    resultSize Int64,
+    diskBytesSpilled Int64,
+    memoryBytesSpilled Int64,
+    peakExecutionMemory Int64,
+    recordsRead Int64,
+    bytesRead Int64,
+    recordsWritten Int64,
+    bytesWritten Int64,
+    shuffleFetchWaitTime Int64,
+    shuffleTotalBytesRead Int64,
+    shuffleTotalBlocksFetched Int64,
+    shuffleLocalBlocksFetched Int64,
+    shuffleRemoteBlocksFetched Int64,
+    shuffleLocalBytesRead Int64,
+    shuffleRemoteBytesRead Int64,
+    shuffleRemoteBytesReadToDisk Int64,
+    shuffleRecordsRead Int64,
+    shuffleWriteTime Int64,
+    shuffleBytesWritten Int64,
+    shuffleRecordsWritten Int64,
+
+    -- colunas extras:
+    tabela_referente String,
+    execution_date Date,
+    execution_id String,
+    execution_ts DateTime
+) ENGINE = MergeTree()
+ORDER BY (jobId, stageId);
+
+
+
+
+
+CREATE TABLE metrics.agg_stg_metrics (
+    numStages Int64,
+    numTasks Nullable(Int64),
+    elapsedTime Nullable(Int64),
+    stageDuration Nullable(Int64),
+    executorRunTime Nullable(Int64),
+    executorCpuTime Nullable(Int64),
+    executorDeserializeTime Nullable(Int64),
+    executorDeserializeCpuTime Nullable(Int64),
+    resultSerializationTime Nullable(Int64),
+    jvmGCTime Nullable(Int64),
+    shuffleFetchWaitTime Nullable(Int64),
+    shuffleWriteTime Nullable(Int64),
+    resultSize Nullable(Int64),
+    diskBytesSpilled Nullable(Int64),
+    memoryBytesSpilled Nullable(Int64),
+    peakExecutionMemory Nullable(Int64),
+    recordsRead Nullable(Int64),
+    bytesRead Nullable(Int64),
+    recordsWritten Nullable(Int64),
+    bytesWritten Nullable(Int64),
+    shuffleRecordsRead Nullable(Int64),
+    shuffleTotalBlocksFetched Nullable(Int64),
+    shuffleLocalBlocksFetched Nullable(Int64),
+    shuffleRemoteBlocksFetched Nullable(Int64),
+    shuffleTotalBytesRead Nullable(Int64),
+    shuffleLocalBytesRead Nullable(Int64),
+    shuffleRemoteBytesRead Nullable(Int64),
+    shuffleRemoteBytesReadToDisk Nullable(Int64),
+    shuffleBytesWritten Nullable(Int64),
+    shuffleRecordsWritten Nullable(Int64),
+
+    -- colunas extras:
+    tabela_referente String,
+    execution_date Date,
+    execution_id String,
+    execution_ts DateTime
+) ENGINE = MergeTree()
+ORDER BY numStages;
+
+
+
+
+SHOW TABLES FROM metrics;
+
+select * from metrics.pydeequ_verification_results;

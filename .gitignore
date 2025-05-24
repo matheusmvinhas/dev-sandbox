@@ -8,3 +8,4 @@ spark-warehouse/
 .DS_Store
 spark-jars/
 spark-events/
+metabase_pg_backup.sql
