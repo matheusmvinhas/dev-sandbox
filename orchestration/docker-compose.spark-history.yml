@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  spark-history:
+    image: bitnami/spark:3.5.0
+    container_name: spark-history
+    ports:
+      - "18080:18080"
+    environment:
+      - SPARK_NO_DAEMONIZE=true
+      - SPARK_HISTORY_OPTS=-Dspark.history.fs.logDirectory=file:/tmp/spark-events -Dspark.history.ui.port=18080 -Dspark.plugins=io.dataflint.spark.SparkDataflintPlugin
+      - SPARK_EXTRA_CLASSPATH=/opt/bitnami/spark/dataflint
+    command: >
+      bash -c "/opt/bitnami/spark/bin/spark-class org.apache.spark.deploy.history.HistoryServer"
+    volumes:
+      - ../dataplataform/spark-events:/tmp/spark-events
+      - ../dataplataform/spark-jars:/opt/bitnami/spark/dataflint
+    networks:
+      - dev-sandbox
+
+networks:
+  dev-sandbox:
+    driver: bridge

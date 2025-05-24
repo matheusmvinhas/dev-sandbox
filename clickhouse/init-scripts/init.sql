@@ -67,10 +67,6 @@ CREATE TABLE metrics.task_metrics (
 ) ENGINE = MergeTree()
 ORDER BY (jobId, stageId, `index`);
 
-
-
-
-
 CREATE TABLE metrics.agg_task_metrics (
     numtasks Int64,
     elapsedTime Nullable(Int64),
@@ -111,10 +107,6 @@ CREATE TABLE metrics.agg_task_metrics (
     execution_ts DateTime
 ) ENGINE = MergeTree()
 ORDER BY numtasks;
-
-
-
-
 
 CREATE TABLE metrics.stg_metrics (
     jobId Int32,
@@ -160,10 +152,6 @@ CREATE TABLE metrics.stg_metrics (
 ) ENGINE = MergeTree()
 ORDER BY (jobId, stageId);
 
-
-
-
-
 CREATE TABLE metrics.agg_stg_metrics (
     numStages Int64,
     numTasks Nullable(Int64),
@@ -203,10 +191,3 @@ CREATE TABLE metrics.agg_stg_metrics (
     execution_ts DateTime
 ) ENGINE = MergeTree()
 ORDER BY numStages;
-
-
-
-
-SHOW TABLES FROM metrics;
-
-select * from metrics.pydeequ_verification_results;

@@ -22,17 +22,17 @@ with DAG(
     #         "docker exec dev-sandbox-etl-runner-1 "
     #         "spark-submit "
     #         "--master local[*] "
-    #         "/app/etl/teste_spark_etl.py"
+    #         "/app/scripts/exemple/teste_spark_etl.py"
     #     ),
     # )
 
     run_local_spark = BashOperator(
         task_id="run_spark_pydeequ_local",
         bash_command=(
-            "docker exec -e SPARK_VERSION=3.5 dev-sandbox-etl-runner-1 "
+            "docker exec -e SPARK_VERSION=3.5 etl-runner "
             "spark-submit "
             "--master local[*] "
-            "/app/etl/pydeequ_exemple.py"
+            "/app/scripts/exemple/pydeequ_exemple.py"
         ),
     do_xcom_push=False
     )

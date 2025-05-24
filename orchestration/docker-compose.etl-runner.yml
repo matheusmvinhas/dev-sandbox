@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  etl-runner:
+    build:
+      context: ../
+      dockerfile: dataplataform/docker/etl-runner/Dockerfile
+    image: dev-sandbox-etl-runner:latest
+    container_name: etl-runner
+    ports:
+      - "4040:4040"
+    volumes:
+      - ../dataplataform/scripts:/app/scripts
+      - ../dataplataform/data:/app/data
+      - ../dataplataform/utils:/app/utils
+      - ../dataplataform/spark-events:/tmp/spark-events
+    command: tail -f /dev/null
+    networks:
+      - dev-sandbox
+
+networks:
+  dev-sandbox:
+    driver: bridge

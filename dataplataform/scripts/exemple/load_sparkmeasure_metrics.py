@@ -3,7 +3,7 @@ import subprocess
 from pyspark.sql import SparkSession
 
 # ✅ Variáveis de conexão ClickHouse
-CLICKHOUSE_HOST = "dev-sandbox-clickhouse-1"            # Altere conforme sua infra
+CLICKHOUSE_HOST = "clickhouse"            # Altere conforme sua infra
 CLICKHOUSE_PORT = 9000                   # Porta padrão
 CLICKHOUSE_USER = "default"              # Usuário padrão
 CLICKHOUSE_PASSWORD = ""                 # Senha se tiver
@@ -11,7 +11,7 @@ CLICKHOUSE_DB = "metrics"                # Banco de dados
 
 # ✅ Variáveis de conexão JDBC
 JDBC_PORT = 8123                         # Porta para JDBC HTTP
-jdbc_url = f"jdbc:clickhouse://dev-sandbox-clickhouse-1:{JDBC_PORT}/{CLICKHOUSE_DB}"
+jdbc_url = f"jdbc:clickhouse://clickhouse:{JDBC_PORT}/{CLICKHOUSE_DB}"
 
 # ✅ Diretório de Parquet e mapeamento tabela -> caminho
 tables = [

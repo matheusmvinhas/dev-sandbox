@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  postgres_airflow:
+    image: postgres:15
+    container_name: postgres_airflow
+    environment:
+      POSTGRES_USER: ${POSTGRES_AIRFLOW_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_AIRFLOW_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_AIRFLOW_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - dev-sandbox
+
+  airflow-standalone:
+    build: 
+      context: ../
+      dockerfile: airflow/docker/Dockerfile
+    image: apache/airflow:3.0.0-python3.11
+    container_name: airflow
+    ports:
+      - "8080:8080"
+    environment:
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${POSTGRES_AIRFLOW_USER}:${POSTGRES_AIRFLOW_PASSWORD}@postgres_airflow/${POSTGRES_AIRFLOW_DB}
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__WEBSERVER__DEFAULT_UI_TIMEZONE: America/Sao_Paulo
+    depends_on:
+      - postgres_airflow
+    volumes:
+      - ../airflow/dags:/opt/airflow/dags
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: standalone
+    networks:
+      - dev-sandbox
+
+volumes:
+  pg_data:
+
+networks:
+  dev-sandbox:
+    driver: bridge

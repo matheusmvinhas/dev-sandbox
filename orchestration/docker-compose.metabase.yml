@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  postgres_metabase:
+    image: postgres:15
+    container_name: postgres_metabase
+    environment:
+      POSTGRES_USER: ${MB_DB_USER}
+      POSTGRES_PASSWORD: ${MB_DB_PASS}
+      POSTGRES_DB: ${MB_DB_DBNAME}
+    ports:
+      - "5433:5432"
+    volumes:
+      - pg_data_metabase:/var/lib/postgresql/data
+    networks:
+      - dev-sandbox
+
+  metabase:
+    image: metabase/metabase:latest
+    container_name: metabase
+    ports:
+      - "${MB_JETTY_PORT}:3000"
+    depends_on:
+      - postgres_metabase
+    environment:
+      MB_DB_TYPE: postgres
+      MB_DB_DBNAME: ${MB_DB_DBNAME}
+      MB_DB_PORT: ${MB_DB_PORT}
+      MB_DB_USER: ${MB_DB_USER}
+      MB_DB_PASS: ${MB_DB_PASS}
+      MB_DB_HOST: postgres_metabase
+    networks:
+      - dev-sandbox
+
+volumes:
+  pg_data_metabase:
+
+networks:
+  dev-sandbox:
+    driver: bridge

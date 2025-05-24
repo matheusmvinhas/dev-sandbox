@@ -17,11 +17,11 @@ spark = SparkSession.builder \
 df = spark.read.parquet('/app/data/output/metrics_pydeequ/check_result')
 
 # JDBC URL
-CLICKHOUSE_HOST = "dev-sandbox-clickhouse-1"
+CLICKHOUSE_HOST = "clickhouse"
 CLICKHOUSE_PORT = "8123"
 CLICKHOUSE_DB = "metrics"
 
-jdbc_url = "jdbc:clickhouse://dev-sandbox-clickhouse-1:8123/metrics"
+jdbc_url = "jdbc:clickhouse://clickhouse:8123/metrics"
 
 # Escreve na tabela ClickHouse com overwrite
 print(f"Escrevendo na tabela {CLICKHOUSE_DB}.{CLICKHOUSE_TABLE} via {jdbc_url}")
