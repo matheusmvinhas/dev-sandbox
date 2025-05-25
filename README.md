@@ -1,6 +1,8 @@
 
 # Dev Sandbox
 
+![diagrama](sandbox.jpeg)
+
 ## 📦 Sobre o projeto
 
 Este projeto é um ambiente de desenvolvimento **completo e containerizado** para execução e orquestração de pipelines de dados. Ele integra Airflow, Spark, ClickHouse, MinIO e Metabase, proporcionando uma plataforma robusta para testes, análises e validação de ETLs.
