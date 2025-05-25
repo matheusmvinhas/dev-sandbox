@@ -2,7 +2,6 @@
 COMPOSE_FILES = \
 	-f orchestration/docker-compose.airflow.yml \
 	-f orchestration/docker-compose.clickhouse.yml \
-	-f orchestration/docker-compose.etl-runner.yml \
 	-f orchestration/docker-compose.metabase.yml \
 	-f orchestration/docker-compose.spark-history.yml
 

@@ -9,7 +9,17 @@ services:
       - "${CLICKHOUSE_NATIVE_PORT}:9000"
     volumes:
       - clickhouse_data:/var/lib/clickhouse
-      - ../clickhouse/init-scripts:/docker-entrypoint-initdb.d
+    networks:
+      - dev-sandbox
+
+  clickhouse-init:
+    image: clickhouse/clickhouse-server:${CLICKHOUSE_VERSION}
+    container_name: clickhouse-init
+    depends_on:
+      - clickhouse
+    volumes:
+      - ../clickhouse/init-sql:/init-sql
+    entrypoint: ["/init-sql/init.sh"]
     networks:
       - dev-sandbox
 

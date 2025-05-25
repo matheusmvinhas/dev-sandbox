@@ -1,6 +1,6 @@
-create database metrics;
+create database IF NOT EXISTS metrics;
 
-CREATE TABLE metrics.pydeequ_verification_results
+CREATE TABLE IF NOT EXISTS metrics.pydeequ_verification_results
 (
     `check` String,
     `check_level` String,
@@ -15,7 +15,7 @@ CREATE TABLE metrics.pydeequ_verification_results
 ENGINE = MergeTree()
 ORDER BY check;
 
-CREATE TABLE metrics.task_metrics (
+CREATE TABLE IF NOT EXISTS metrics.task_metrics (
     -- colunas existentes...
 
     jobId Int32,
@@ -67,7 +67,7 @@ CREATE TABLE metrics.task_metrics (
 ) ENGINE = MergeTree()
 ORDER BY (jobId, stageId, `index`);
 
-CREATE TABLE metrics.agg_task_metrics (
+CREATE TABLE IF NOT EXISTS metrics.agg_task_metrics (
     numtasks Int64,
     elapsedTime Nullable(Int64),
     duration Nullable(Int64),
@@ -108,7 +108,7 @@ CREATE TABLE metrics.agg_task_metrics (
 ) ENGINE = MergeTree()
 ORDER BY numtasks;
 
-CREATE TABLE metrics.stg_metrics (
+CREATE TABLE IF NOT EXISTS metrics.stg_metrics (
     jobId Int32,
     jobGroup Nullable(String),
     stageId Int32,
