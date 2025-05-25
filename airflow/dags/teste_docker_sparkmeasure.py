@@ -1,8 +1,7 @@
 from airflow import DAG
-from airflow.providers.docker.operators.docker import DockerOperator
-from datetime import timedelta
-from datetime import datetime
-from docker.types import Mount
+from datetime import datetime, timedelta
+from custom_operators.custom_docker_operator import CustomDockerOperator
+
 
 default_args = {
     'owner': 'data-team',
@@ -23,58 +22,14 @@ with DAG(
     tags=['spark', 'docker', 'sparkmeasure'],
 ) as dag:
 
-    run_local_spark = DockerOperator(
+    run_local_spark = CustomDockerOperator(
         task_id='run_spark_sparkmeasure_local',
-        image='dev-sandbox-etl-runner:latest',
-        api_version='auto',
-        auto_remove='success',
-        command="spark-submit --master local[*] /app/scripts/exemple/teste_sparkmeasure_etl.py",
-        docker_url='unix://var/run/docker.sock',
-        network_mode='orchestration_dev-sandbox',
-        environment={
-            "SPARK_VERSION": "3.5",
-            "MINIO_ENDPOINT": "http://minio:9000",
-            "MINIO_ACCESS_KEY": "minio",
-            "MINIO_SECRET_KEY": "minio123",
-            "AWS_ACCESS_KEY_ID": "minio",
-            "AWS_SECRET_ACCESS_KEY": "minio123"
-        },
-        mounts=[
-        Mount(source="/Users/matheusvinhas/projects/dev-sandbox/dataplataform/scripts", target="/app/scripts", type="bind"),
-        Mount(source="/Users/matheusvinhas/projects/dev-sandbox/dataplataform/utils", target="/app/utils", type="bind"),
-        Mount(source="/Users/matheusvinhas/projects/dev-sandbox/minIo/staging/spark-events", target="/tmp/spark-events", type="bind"),
-        Mount(source='/Users/matheusvinhas/projects/dev-sandbox/dataplataform/spark-jars', target='/app/spark-jars', type='bind')
-        ],
-        tty=False,
-        mount_tmp_dir=False,
-        execution_timeout=timedelta(minutes=10),
+        command="spark-submit --master local[*] /app/scripts/exemple/teste_sparkmeasure_etl.py"
     )
 
-    run_local_spark_load = DockerOperator(
-        task_id='run_load_spark_sparkmeasure_local',
-        image='dev-sandbox-etl-runner:latest',
-        api_version='auto',
-        auto_remove='success',
-        command="spark-submit --master local[*] /app/scripts/exemple/load_sparkmeasure_metrics.py",
-        docker_url='unix://var/run/docker.sock',
-        network_mode='orchestration_dev-sandbox',
-        environment={
-            "SPARK_VERSION": "3.5",
-            "MINIO_ENDPOINT": "http://minio:9000",
-            "MINIO_ACCESS_KEY": "minio",
-            "MINIO_SECRET_KEY": "minio123",
-            "AWS_ACCESS_KEY_ID": "minio",
-            "AWS_SECRET_ACCESS_KEY": "minio123"
-        },
-        mounts=[
-        Mount(source="/Users/matheusvinhas/projects/dev-sandbox/dataplataform/scripts", target="/app/scripts", type="bind"),
-        Mount(source="/Users/matheusvinhas/projects/dev-sandbox/dataplataform/utils", target="/app/utils", type="bind"),
-        Mount(source="/Users/matheusvinhas/projects/dev-sandbox/minIo/staging/spark-events", target="/tmp/spark-events", type="bind"),
-        Mount(source='/Users/matheusvinhas/projects/dev-sandbox/dataplataform/spark-jars', target='/app/spark-jars', type='bind')
-        ],
-        tty=False,
-        mount_tmp_dir=False,
-        execution_timeout=timedelta(minutes=10),
+    run_local_spark_load = CustomDockerOperator(
+        task_id='run_load_sparkmeasure_metrics',
+        command="spark-submit --master local[*] /app/scripts/exemple/load_sparkmeasure_metrics.py"
     )
 
     run_local_spark >> run_local_spark_load

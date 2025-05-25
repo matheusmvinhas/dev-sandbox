@@ -24,15 +24,18 @@ services:
     ports:
       - "8080:8080"
     environment:
-      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${POSTGRES_AIRFLOW_USER}:${POSTGRES_AIRFLOW_PASSWORD}@postgres_airflow/${POSTGRES_AIRFLOW_DB}
-      AIRFLOW__CORE__EXECUTOR: LocalExecutor
-      AIRFLOW__WEBSERVER__DEFAULT_UI_TIMEZONE: America/Sao_Paulo
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://${POSTGRES_AIRFLOW_USER}:${POSTGRES_AIRFLOW_PASSWORD}@postgres_airflow/${POSTGRES_AIRFLOW_DB}
+      - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+      - AIRFLOW__WEBSERVER__DEFAULT_UI_TIMEZONE=America/Sao_Paulo
+      - PYTHONPATH=/opt/airflow/utils:/opt/airflow/custom_operators
     depends_on:
       - postgres_airflow
     volumes:
       - ../airflow/dags:/opt/airflow/dags
+      - ../airflow/utils:/opt/airflow/utils
+      - ../airflow/custom_operators:/opt/airflow/custom_operators
       - /var/run/docker.sock:/var/run/docker.sock
-    command: standalone
+    command: airflow standalone
     networks:
       - dev-sandbox
 
