@@ -207,3 +207,9 @@ make down
 ## ✅ Conclusão
 
 Este ambiente provê uma infraestrutura robusta para desenvolvimento, testes e validação de pipelines de dados em um ecossistema completo. Use os comandos `make` para gerenciar os serviços de forma eficiente.
+
+
+![Made with Docker](https://img.shields.io/badge/Made%20with-Docker-blue)
+![Apache Airflow](https://img.shields.io/badge/Apache-Airflow-green)
+![Apache Spark](https://img.shields.io/badge/Apache-Spark-orange)
+![ClickHouse](https://img.shields.io/badge/DB-ClickHouse-yellow)
