@@ -1,4 +1,5 @@
 from pyspark.sql import SparkSession
+import os
 
 class SessionBuilder():
 
@@ -25,8 +26,19 @@ class SessionBuilder():
             "io.delta.sql.DeltaSparkSessionExtension"
         ]
 
+        # Variáveis de ambiente para MinIO
+        minio_endpoint = os.getenv("MINIO_ENDPOINT", "http://minio:9000")
+        minio_access_key = os.getenv("MINIO_ACCESS_KEY", "minio")
+        minio_secret_key = os.getenv("MINIO_SECRET_KEY", "minio123")
+
         configs = {
-            "spark.hadoop.fs.s3a.aws.credentials.provider": "com.amazonaws.auth.DefaultAWSCredentialsProviderChain",
+            "spark.hadoop.fs.s3a.aws.credentials.provider": "org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider",
+            "spark.hadoop.fs.s3a.access.key": minio_access_key,
+            "spark.hadoop.fs.s3a.secret.key": minio_secret_key,
+            "spark.hadoop.fs.s3a.endpoint": minio_endpoint,
+            "spark.hadoop.fs.s3a.path.style.access": "true",
+            "spark.hadoop.fs.s3a.connection.ssl.enabled": "false",
+            "spark.hadoop.fs.s3a.impl": "org.apache.hadoop.fs.s3a.S3AFileSystem",
             "spark.sql.catalog.spark_catalog": "org.apache.spark.sql.delta.catalog.DeltaCatalog",
             "spark.jars.packages": ",".join(packages),
             "spark.plugins": ",".join(plugins),
@@ -38,7 +50,7 @@ class SessionBuilder():
             "spark.sql.warehouse.dir": "/tmp/spark/spark-warehouse/",
             "spark.serializer": "org.apache.spark.serializer.KryoSerializer",
             "spark.eventLog.enabled": "true",
-            "spark.eventLog.dir": "file:/tmp/spark-events",
+            "spark.eventLog.dir": "file:/tmp/spark-events/"
         }
 
         for param, setting in configs.items():

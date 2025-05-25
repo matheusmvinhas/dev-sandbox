@@ -9,11 +9,14 @@ services:
     container_name: etl-runner
     ports:
       - "4040:4040"
+    environment:
+      MINIO_ENDPOINT: ${MINIO_ENDPOINT}
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
     volumes:
       - ../dataplataform/scripts:/app/scripts
-      - ../dataplataform/data:/app/data
       - ../dataplataform/utils:/app/utils
-      - ../dataplataform/spark-events:/tmp/spark-events
+      - ../minIo/staging/spark-events:/tmp/spark-events
     command: tail -f /dev/null
     networks:
       - dev-sandbox

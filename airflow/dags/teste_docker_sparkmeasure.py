@@ -30,13 +30,19 @@ with DAG(
         auto_remove='success',
         command="spark-submit --master local[*] /app/scripts/exemple/teste_sparkmeasure_etl.py",
         docker_url='unix://var/run/docker.sock',
-        network_mode='bridge',
-        environment={"SPARK_VERSION": "3.5"},
+        network_mode='orchestration_dev-sandbox',
+        environment={
+            "SPARK_VERSION": "3.5",
+            "MINIO_ENDPOINT": "http://minio:9000",
+            "MINIO_ACCESS_KEY": "minio",
+            "MINIO_SECRET_KEY": "minio123",
+            "AWS_ACCESS_KEY_ID": "minio",
+            "AWS_SECRET_ACCESS_KEY": "minio123"
+        },
         mounts=[
         Mount(source="/Users/matheusvinhas/projects/dev-sandbox/dataplataform/scripts", target="/app/scripts", type="bind"),
-        Mount(source="/Users/matheusvinhas/projects/dev-sandbox/dataplataform/data", target="/app/data", type="bind"),
         Mount(source="/Users/matheusvinhas/projects/dev-sandbox/dataplataform/utils", target="/app/utils", type="bind"),
-        Mount(source="/Users/matheusvinhas/projects/dev-sandbox/dataplataform/spark-events", target="/tmp/spark-events", type="bind"),
+        Mount(source="/Users/matheusvinhas/projects/dev-sandbox/minIo/staging/spark-events", target="/tmp/spark-events", type="bind"),
         Mount(source='/Users/matheusvinhas/projects/dev-sandbox/dataplataform/spark-jars', target='/app/spark-jars', type='bind')
         ],
         tty=False,
@@ -52,12 +58,18 @@ with DAG(
         command="spark-submit --master local[*] /app/scripts/exemple/load_sparkmeasure_metrics.py",
         docker_url='unix://var/run/docker.sock',
         network_mode='orchestration_dev-sandbox',
-        environment={"SPARK_VERSION": "3.5"},
+        environment={
+            "SPARK_VERSION": "3.5",
+            "MINIO_ENDPOINT": "http://minio:9000",
+            "MINIO_ACCESS_KEY": "minio",
+            "MINIO_SECRET_KEY": "minio123",
+            "AWS_ACCESS_KEY_ID": "minio",
+            "AWS_SECRET_ACCESS_KEY": "minio123"
+        },
         mounts=[
         Mount(source="/Users/matheusvinhas/projects/dev-sandbox/dataplataform/scripts", target="/app/scripts", type="bind"),
-        Mount(source="/Users/matheusvinhas/projects/dev-sandbox/dataplataform/data", target="/app/data", type="bind"),
         Mount(source="/Users/matheusvinhas/projects/dev-sandbox/dataplataform/utils", target="/app/utils", type="bind"),
-        Mount(source="/Users/matheusvinhas/projects/dev-sandbox/dataplataform/spark-events", target="/tmp/spark-events", type="bind"),
+        Mount(source="/Users/matheusvinhas/projects/dev-sandbox/minIo/staging/spark-events", target="/tmp/spark-events", type="bind"),
         Mount(source='/Users/matheusvinhas/projects/dev-sandbox/dataplataform/spark-jars', target='/app/spark-jars', type='bind')
         ],
         tty=False,

@@ -9,3 +9,4 @@ spark-warehouse/
 spark-jars/
 spark-events/
 metabase_pg_backup.sql
+staging/

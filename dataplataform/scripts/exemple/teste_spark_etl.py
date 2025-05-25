@@ -13,15 +13,15 @@ spark = (
 )
 
 spark.read.csv(
-    "/app/data/teste.csv",
+    "s3a://ip-byte-pool/raw/exemple/teste.csv",
     header=True,
     inferSchema=True,
 ).printSchema()
 
 spark.read.csv(
-    "/app/data/teste.csv",
+    "s3a://ip-byte-pool/raw/exemple/teste.csv",
     header=True,
     inferSchema=True,
-).select("dataColeta").write.mode("overwrite").csv("/app/data/output", header=True)
+).select("dataColeta").write.mode("overwrite").csv("s3a://ip-byte-pool/output/exemple/", header=True)
 
 spark.stop()

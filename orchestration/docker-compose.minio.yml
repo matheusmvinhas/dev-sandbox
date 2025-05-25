@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    ports:
+      - "9002:9000"   # API S3
+      - "9001:9001"   # Console Web
+    environment:
+      MINIO_ROOT_USER: $MINIO_ACCESS_KEY
+      MINIO_ROOT_PASSWORD: $MINIO_SECRET_KEY
+    command: server /data --console-address ":9001"
+    volumes:
+      - ../minIo/data:/data
+      - ../minIo/staging:/staging
+    networks:
+      - dev-sandbox
+
+  minio-init:
+    build:
+      context: ../
+      dockerfile: minIo/minio-init/docker/Dockerfile
+    container_name: minio-init
+    depends_on:
+      - minio
+    volumes:
+      - ../minIo/staging:/staging
+    networks:
+      - dev-sandbox
+
+networks:
+  dev-sandbox:
+    driver: bridge

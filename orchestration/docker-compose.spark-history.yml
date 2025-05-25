@@ -13,7 +13,7 @@ services:
     command: >
       bash -c "/opt/bitnami/spark/bin/spark-class org.apache.spark.deploy.history.HistoryServer"
     volumes:
-      - ../dataplataform/spark-events:/tmp/spark-events
+      - ../minIo/staging/spark-events:/tmp/spark-events
       - ../dataplataform/spark-jars:/opt/bitnami/spark/dataflint
     networks:
       - dev-sandbox

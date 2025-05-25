@@ -56,11 +56,11 @@ stg_metrics_df = add_execution_columns(stagemetrics.create_stagemetrics_DF(),tab
 agg_stg_metrics_df = add_execution_columns(stagemetrics.aggregate_stagemetrics_DF(),tabela_referente, execution_date, execution_id, execution_ts)
 
 
-task_metrics_df.repartition(1).write.mode('append').format('parquet').save('/app/data/output/metrics_sparkMeasure/taskmetrics')
-agg_task_metrics_df.repartition(1).write.mode('append').format('parquet').save('/app/data/output/metrics_sparkMeasure/agg_taskmetrics')
+task_metrics_df.repartition(1).write.mode('append').format('parquet').save('s3a://ip-byte-pool/metrics/metrics_sparkMeasure/taskmetrics')
+agg_task_metrics_df.repartition(1).write.mode('append').format('parquet').save('s3a://ip-byte-pool/metrics/metrics_sparkMeasure/agg_taskmetrics')
 
-stg_metrics_df.repartition(1).write.mode('append').format('parquet').save('/app/data/output/metrics_sparkMeasure/stagemetrics')
-agg_stg_metrics_df.repartition(1).write.mode('append').format('parquet').save('/app/data/output/metrics_sparkMeasure/agg_stagemetrics')
+stg_metrics_df.repartition(1).write.mode('append').format('parquet').save('s3a://ip-byte-pool/metrics/metrics_sparkMeasure/stagemetrics')
+agg_stg_metrics_df.repartition(1).write.mode('append').format('parquet').save('s3a://ip-byte-pool/metrics/metrics_sparkMeasure/agg_stagemetrics')
 
 
 spark.stop()

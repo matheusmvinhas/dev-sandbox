@@ -1,6 +1,6 @@
 
 import subprocess
-from pyspark.sql import SparkSession
+from utils.SparkHelper import SessionBuilder
 
 # ✅ Variáveis de conexão ClickHouse
 CLICKHOUSE_HOST = "clickhouse"            # Altere conforme sua infra
@@ -15,14 +15,14 @@ jdbc_url = f"jdbc:clickhouse://clickhouse:{JDBC_PORT}/{CLICKHOUSE_DB}"
 
 # ✅ Diretório de Parquet e mapeamento tabela -> caminho
 tables = [
-    ("agg_stg_metrics", "/app/data/output/metrics_sparkMeasure/agg_stagemetrics"),
-    ("agg_task_metrics", "/app/data/output/metrics_sparkMeasure/agg_taskmetrics"),
-    ("stg_metrics", "/app/data/output/metrics_sparkMeasure/stagemetrics"),
-    ("task_metrics", "/app/data/output/metrics_sparkMeasure/taskmetrics")
+    ("agg_stg_metrics", "s3a://ip-byte-pool/metrics/metrics_sparkMeasure/agg_stagemetrics"),
+    ("agg_task_metrics", "s3a://ip-byte-pool/metrics/metrics_sparkMeasure/agg_taskmetrics"),
+    ("stg_metrics", "s3a://ip-byte-pool/metrics/metrics_sparkMeasure/stagemetrics"),
+    ("task_metrics", "s3a://ip-byte-pool/metrics/metrics_sparkMeasure/taskmetrics")
 ]
 
 # ✅ Criação da SparkSession
-spark = SparkSession.builder \
+spark = SessionBuilder.get_builder() \
     .appName("Spark ClickHouse ETL") \
     .getOrCreate()
 

@@ -1,14 +1,20 @@
+.PHONY: clean-spark-events clean-output clean-all
 
 COMPOSE_FILES = \
 	-f orchestration/docker-compose.airflow.yml \
 	-f orchestration/docker-compose.clickhouse.yml \
 	-f orchestration/docker-compose.metabase.yml \
-	-f orchestration/docker-compose.spark-history.yml
+	-f orchestration/docker-compose.spark-history.yml \
+	-f orchestration/docker-compose.etl-runner.yml \
+	-f orchestration/docker-compose.minio.yml 
 
 # Nome do container do Airflow
 AIRFLOW_CONTAINER=airflow
 METABASE_CONTAINER=metabase
 CLICKHOUSE_CONTAINER=clickhouse
+
+
+SCRIPTS_DIR=./minIo/scripts
 
 # Nome do container do Postgres usado pelo Metabase
 POSTGRES_METABASE_CONTAINER=postgres_metabase
@@ -63,6 +69,10 @@ logs-clickhouse:
 	@echo "📄 Acompanhando logs do clickhouse..."
 	docker logs -f $(CLICKHOUSE_CONTAINER)
 # 🧪 Teste (placeholder)
+
+logs-minio-init:
+	docker logs -f minio-init
+
 test:
 	@echo "✅ Teste OK - ambiente configurado"
 
@@ -86,6 +96,10 @@ up-metabase:
 	@echo "🚀 Subindo Metabase..."
 	docker-compose --env-file $(ENV_FILE) -f orchestration/docker-compose.metabase.yml up -d --build
 
+up-minio:
+	@echo "🚀 Subindo MiniIo..."
+	docker-compose --env-file $(ENV_FILE) -f orchestration/docker-compose.minio.yml up -d --build
+
 up-spark-history:
 	@echo "🚀 Subindo Spark History..."
 	docker-compose --env-file $(ENV_FILE) -f orchestration/docker-compose.spark-history.yml up -d --build
@@ -101,3 +115,35 @@ restore-metabase-db-clean:
 	@echo "♻️ Restaurando banco do Metabase (apagando tudo antes)..."
 	docker exec -i $(POSTGRES_METABASE_CONTAINER) psql -U $(POSTGRES_METABASE_USER) -d $(POSTGRES_METABASE_DB) -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"
 	docker exec -i $(POSTGRES_METABASE_CONTAINER) psql -U $(POSTGRES_METABASE_USER) -d $(POSTGRES_METABASE_DB) < $(BACKUP_FILE)
+
+
+# Limpa logs de execução do Spark
+clean-spark-events:
+	@if [ -d "minIo/staging/spark-events" ]; then \
+		echo "🧹 Limpando spark-events..."; \
+		rm -rf minIo/staging/spark-events/*; \
+		echo "✅ spark-events limpo."; \
+	else \
+		echo "⚠️ Diretório spark-events não encontrado. Nenhuma ação realizada."; \
+	fi
+
+# Limpa diretório de output dos dados processados
+
+.PHONY: clean-all clean-old clean-prefix
+
+# Caminho padrão para os scripts
+
+minio-clean-all:
+	@echo "🔴 Limpando todos os arquivos dos buckets no MinIO..."
+	@$(SCRIPTS_DIR)/clean_minio_all.sh
+	@echo "✅ Limpeza completa concluída."
+
+minio-clean-old:
+	@echo "🟠 Limpando arquivos antigos dos buckets no MinIO..."
+	@$(SCRIPTS_DIR)/clean_minio_old.sh
+	@echo "✅ Limpeza de arquivos antigos concluída."
+
+minio-clean-prefix:
+	@echo "🟡 Limpando arquivos por prefixo no MinIO..."
+	@$(SCRIPTS_DIR)/clean_minio_prefix.sh
+	@echo "✅ Limpeza seletiva concluída."

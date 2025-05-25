@@ -19,14 +19,14 @@ spark = (
 execution_date = date.today().strftime("%Y-%m-%d")
 
 df = spark.read.csv(
-    "/app/data/teste.csv",
+    "s3a://ip-byte-pool/raw/exemple/teste.csv",
     header=True,
     inferSchema=True,
 )
 
 from pydeequ.repository import FileSystemMetricsRepository, ResultKey
 
-metrics_file = f"/app/data/output/metrics_pydeequ/repository/exemple_metrics.json"
+metrics_file = f"s3a://ip-byte-pool/metrics/metrics_pydeequ/repository/exemple_metrics.json"
 exemple_repository = FileSystemMetricsRepository(spark, path = metrics_file)
 
 key_tags = {"tag": f"exemple_{execution_date}"}
@@ -78,7 +78,7 @@ checkResult_df = checkResult_df \
     .withColumn("execution_id", lit(execution_id)) \
     .withColumn("execution_ts", execution_ts) \
     .withColumn("tabela_referente", lit(tabela_referente))
-checkResult_df.repartition(1).write.mode('append').format('parquet').save("/app/data/output/metrics_pydeequ/check_result/")
+checkResult_df.repartition(1).write.mode('append').format('parquet').save("s3a://ip-byte-pool/metrics/metrics_pydeequ/check_result/")
 
 print("ETL PyDeequ finalizado com sucesso!")
 spark.sparkContext._gateway.shutdown_callback_server()
